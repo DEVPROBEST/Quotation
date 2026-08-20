@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 220" width="200" height="220">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24" />
+      <stop offset="50%" stop-color="#d97706" />
+      <stop offset="100%" stop-color="#92400e" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- Outer Crest Shield -->
+  <g filter="url(#shadow)">
+    <path d="M 100 10 C 145 10, 175 35, 175 90 C 175 145, 140 175, 100 190 C 60 175, 25 145, 25 90 C 25 35, 55 10, 100 10 Z" fill="none" stroke="url(#goldGrad)" stroke-width="7" stroke-linejoin="round" />
+    <path d="M 100 18 C 138 18, 165 40, 165 90 C 165 138, 133 165, 100 178 C 67 165, 35 138, 35 90 C 35 40, 62 18, 100 18 Z" fill="none" stroke="url(#goldGrad)" stroke-width="2.5" opacity="0.6" />
+
+    <!-- Stylized A Emblem inside Crest -->
+    <path d="M 62 135 L 100 45 L 138 135" fill="none" stroke="url(#goldGrad)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M 74 102 L 126 102" fill="none" stroke="url(#goldGrad)" stroke-width="8" stroke-linecap="round" />
+    <circle cx="100" cy="45" r="8" fill="#f59e0b" />
+  </g>
+
+  <!-- ANALYST Text -->
+  <text x="100" y="212" text-anchor="middle" font-family="'Sarabun', 'Helvetica', 'Arial', sans-serif" font-weight="900" font-size="21" fill="#0f172a" letter-spacing="2">ANALYST</text>
+</svg>

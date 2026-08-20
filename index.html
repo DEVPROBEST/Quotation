@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบออกใบเสนอราคา - ANALYST INTERNATIONAL</title>
+  <link rel="stylesheet" href="style.css?v=3.5">
+</head>
+<body>
+  <!-- Top App Navigation -->
+  <header class="app-header no-print">
+    <div class="brand-container">
+      <div class="brand-logo-badge">ANALYST</div>
+      <div>
+        <h1 class="brand-title">ระบบออกใบเสนอราคา (Quotation Generator)</h1>
+        <p class="brand-subtitle">บริษัท อนาลิสต์ อินเตอร์เนชั่นแนล จำกัด</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button id="btnReset" class="btn btn-secondary">
+        🔄 คืนค่าเริ่มต้น
+      </button>
+      <button id="btnPrint" class="btn btn-primary">
+        🖨️ พิมพ์ / บันทึก PDF
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="app-layout">
+    
+    <!-- Left Column: Input Form (No Print) -->
+    <div class="form-panel no-print">
+      
+      <!-- Company Information Section (Adjustable) -->
+      <div class="form-section-title">
+        ข้อมูลบริษัทผู้เสนอราคา (Company Information)
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group col-span-2">
+          <label>โลโก้บริษัท (Company Logo)</label>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <input type="file" id="logoUploader" accept="image/*" class="form-control" style="font-size: 0.75rem;">
+            <button id="btnResetLogo" type="button" class="btn-add-item" style="background: #64748b; flex-shrink: 0;">รีเซ็ตโลโก้</button>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center; margin-top: 6px;">
+            <label style="font-size: 0.7rem; color: #64748b; flex-shrink: 0;">ปรับขนาดโลโก้ (Size):</label>
+            <input type="range" id="logoSizeSlider" min="30" max="120" value="65" style="flex: 1; cursor: pointer;">
+            <span id="logoSizeVal" style="font-size: 0.7rem; color: #64748b; flex-shrink: 0; width: 32px;">65px</span>
+          </div>
+        </div>
+        <div class="form-group col-span-2">
+          <label>ชื่อบริษัท (Company Name)</label>
+          <input type="text" id="compName" class="form-control">
+        </div>
+        <div class="form-group col-span-2">
+          <label>ที่อยู่บริษัท (Company Address)</label>
+          <textarea id="compAddress" rows="2" class="form-control"></textarea>
+        </div>
+        <div class="form-group col-span-2">
+          <label>ข้อมูลการติดต่อ (Tel / Fax / Email)</label>
+          <input type="text" id="compContact" class="form-control">
+        </div>
+        <div class="form-group col-span-2">
+          <label>เลขประจำตัวผู้เสียภาษี (Tax ID)</label>
+          <input type="text" id="taxId" class="form-control">
+        </div>
+      </div>
+
+      <!-- Customer Information Section -->
+      <div class="form-section-title" style="margin-top: 10px;">
+        ข้อมูลลูกค้าและเลขที่เอกสาร
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>เลขที่ใบเสนอราคา (Quote No.)</label>
+          <input type="text" id="quoteNo" class="form-control" placeholder="เช่น QT69/0169(R1)">
+        </div>
+        <div class="form-group">
+          <label>วันที่ (Date)</label>
+          <input type="text" id="quoteDate" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>ผู้ติดต่อฝั่งบริษัท (Contact Person)</label>
+          <input type="text" id="contactPerson" class="form-control" placeholder="เช่น Ms.Ailada">
+        </div>
+        <div class="form-group">
+          <label>เบอร์โทรสารลูกค้า (Fax)</label>
+          <input type="text" id="custFax" class="form-control" placeholder="-">
+        </div>
+        <div class="form-group col-span-2">
+          <label>เรียน / Attention (ชื่อลูกค้า/ผู้รับเสนอราคา)</label>
+          <input type="text" id="custAttention" class="form-control" placeholder="กรอกชื่อลูกค้า/บริษัทผู้สั่งซื้อ">
+        </div>
+        <div class="form-group col-span-2">
+          <label>ที่อยู่ลูกค้า (Address)</label>
+          <textarea id="custAddress" rows="2" class="form-control" placeholder="กรอกที่อยู่ลูกค้า"></textarea>
+        </div>
+        <div class="form-group">
+          <label>เบอร์โทรศัพท์ลูกค้า (Tel)</label>
+          <input type="text" id="custTel" class="form-control" placeholder="เบอร์โทรลูกค้า">
+        </div>
+        <div class="form-group">
+          <label>ชื่อโครงการ / งาน (JOB)</label>
+          <input type="text" id="jobTitle" class="form-control" placeholder="ชื่อโครงการ/งาน">
+        </div>
+      </div>
+
+      <!-- QNAP Product Database & Profit Margin Items Section -->
+      <div>
+        <div class="form-section-header">
+          <div class="form-section-title" style="border-bottom: none; padding-bottom: 0;">
+            รายการสินค้า / บริการ & ฐานข้อมูล QNAP
+          </div>
+          <button id="btnAddItem" class="btn-add-item">
+            + เพิ่มรายการ
+          </button>
+        </div>
+
+        <div id="itemsFormContainer" style="margin-top: 10px;">
+          <!-- Dynamic Items inserted via JS -->
+        </div>
+      </div>
+
+      <!-- Financials Section -->
+      <div>
+        <div class="form-section-title">
+          ส่วนลดและภาษี (Financials)
+        </div>
+        <div class="form-grid" style="margin-top: 8px;">
+          <div class="form-group">
+            <label>ส่วนลด (บาท)</label>
+            <input type="number" id="discountAmount" value="0" step="any" class="form-control">
+          </div>
+          <div class="form-group" style="flex-direction: row; align-items: center; gap: 8px; margin-top: 18px;">
+            <input type="checkbox" id="calcVat" checked style="width: 16px; height: 16px; cursor: pointer;">
+            <label for="calcVat" style="cursor: pointer; margin-bottom: 0;">คิด VAT 7%</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Terms & Notes -->
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div class="form-section-title">
+          เงื่อนไขและผู้เสนอราคา
+        </div>
+        <div class="form-group">
+          <label>เงื่อนไขการชำระเงิน</label>
+          <textarea id="paymentTerms" rows="2" class="form-control"></textarea>
+        </div>
+        <div class="form-group">
+          <label>หมายเหตุ (บรรทัดละ 1 ข้อ)</label>
+          <textarea id="notes" rows="4" class="form-control"></textarea>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>ชื่อผู้เสนอราคา</label>
+            <input type="text" id="quotedBy" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>ระยะเวลาแสดงราคา</label>
+            <input type="text" id="validDays" value="ราคานี้ตกลงตามเงื่อนไขภายใน 30 วัน" class="form-control">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Column: A4 Paper Preview (Printable area) -->
+    <div class="preview-panel">
+      <div id="quotationPaper" class="a4-page">
+        
+        <!-- Top Document Content -->
+        <div class="doc-top-section">
+          <!-- Company Header -->
+          <div class="company-header">
+            <div style="display: flex; align-items: center; justify-content: center; flex-shrink: 0;" id="logoWrapper">
+              <img id="viewCompanyLogo" src="logo.png" alt="Company Logo" style="max-height: 65px; max-width: 120px; object-fit: contain;">
+            </div>
+            <div class="company-title-container">
+              <h1 class="company-name" id="viewCompName">บริษัท อนาลิสต์ อินเตอร์เนชั่นแนล จำกัด / ANALYST INTERNATIONAL Co., Ltd.</h1>
+              <p class="company-details" id="viewCompAddress">36/46 ม.13 ต.บึงคำพร้อย อ.ลำลูกกา จ.ปทุมธานี 10150 / 36/46 Moo 13 BuengKhamPhroi, Lam Lukka, Phathum Thani 10150</p>
+              <p class="company-details" id="viewCompContact">Tel. 02-150-0240 Fax. 02-150-0296 E-mail: dr.analyst.service@gmail.com</p>
+              <p class="company-details" style="font-weight: bold;">เลขประจำตัวผู้เสียภาษี/ Tax ID: <span id="viewTaxId">0105555081871</span></p>
+            </div>
+          </div>
+
+          <!-- Document Title Bar -->
+          <div class="doc-title-bar">
+            ใบเสนอราคา / QUOTATION
+          </div>
+
+          <!-- Meta Data Grid Box -->
+          <div class="doc-meta-grid">
+            <div class="meta-left">
+              <div style="display: flex;"><span style="font-weight: bold; width: 65px; flex-shrink: 0;">Attention:</span><span id="viewAttention" style="font-weight: 500;"></span></div>
+              <div style="display: flex; align-items: flex-start;"><span style="width: 65px; flex-shrink: 0; opacity: 0;">.</span><span id="viewAddress" style="white-space: pre-line;"></span></div>
+              <div style="display: flex; padding-top: 4px;"><span style="font-weight: bold; width: 65px; flex-shrink: 0;">Tel.</span><span id="viewTel"></span></div>
+              <div style="display: flex;"><span style="font-weight: bold; width: 65px; flex-shrink: 0;">Fax.</span><span id="viewFax"></span></div>
+            </div>
+            <div class="meta-right">
+              <div class="meta-row"><span style="font-weight: bold;">เลขที่/ No. :</span><span id="viewQuoteNo" style="font-weight: bold;"></span></div>
+              <div class="meta-row"><span style="font-weight: bold;">วันที่ Date :</span><span id="viewDate"></span></div>
+              <div class="meta-row"><span style="font-weight: bold;">Contact Person :</span><span id="viewContactPerson"></span></div>
+              <div class="meta-row" style="padding-top: 4px;"><span style="font-weight: bold; margin-right: 4px;">JOB :</span><span id="viewJob" style="text-align: right; font-weight: 500;"></span></div>
+            </div>
+          </div>
+
+          <!-- Sub Heading Message -->
+          <div class="sub-heading-text">
+            <p>ขอเสนอราคาและเงื่อนไขสำหรับท่านดังนี้</p>
+            <p style="font-style: italic; color: #475569;">We are please to submit you the following described here in at price, items and terms stated :</p>
+          </div>
+
+          <!-- Continuous Full-Height Grid Container (Items Table + Bottom Frame Box) -->
+          <div class="full-table-container">
+            <table class="items-table">
+              <thead>
+                <tr>
+                  <th style="width: 8%;">ลำดับที่<br><span style="font-weight: normal; font-size: 8px;">ITEM</span></th>
+                  <th style="width: 54%;">รายการ<br><span style="font-weight: normal; font-size: 8px;">DESCRIPTION</span></th>
+                  <th style="width: 10%;">จำนวน<br><span style="font-weight: normal; font-size: 8px;">Quantity</span></th>
+                  <th style="width: 13%;">ราคา<br><span style="font-weight: normal; font-size: 8px;">Price</span></th>
+                  <th style="width: 15%;">จำนวนเงิน<br><span style="font-weight: normal; font-size: 8px;">Amount</span></th>
+                </tr>
+              </thead>
+              <tbody id="viewItemsTable">
+                <!-- Dynamic Items -->
+              </tbody>
+            </table>
+
+            <!-- Bottom Frame Box (Summary Grid + Baht Text Bar + Signatures) - Anchored at the bottom of the table frame -->
+            <div class="bottom-frame-box">
+              <!-- Terms & Summary Box -->
+              <div class="summary-grid">
+                <div class="terms-box">
+                  <p><span style="font-weight: bold;">เงื่อนไขการชำระเงิน :</span> <span id="viewPaymentTerms"></span></p>
+                  <div style="margin-top: 4px;">
+                    <p style="font-weight: bold;">หมายเหตุ :</p>
+                    <ul id="viewNotes" style="list-style: none; padding-left: 6px;">
+                      <!-- Dynamic Notes -->
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="totals-box">
+                  <div class="total-row" style="font-weight: bold; background: #f8fafc;">
+                    <span>รวมเงิน</span>
+                    <span id="viewSubtotal">0.00</span>
+                  </div>
+                  <div class="total-row">
+                    <span>ส่วนลด</span>
+                    <span id="viewDiscount">-</span>
+                  </div>
+                  <div class="total-row" style="font-weight: 600;">
+                    <span>ราคาหลังส่วนลด</span>
+                    <span id="viewAfterDiscount">0.00</span>
+                  </div>
+                  <div class="total-row">
+                    <span>Vat7%</span>
+                    <span id="viewVat">0.00</span>
+                  </div>
+                  <div class="total-row grand-total">
+                    <span>รวมทั้งสิ้น</span>
+                    <span id="viewGrandTotal">0.00</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Thai Baht Text Bar -->
+              <div class="baht-text-bar">
+                <span>-</span>
+                <span id="viewBahtText">ศูนย์บาทถ้วน</span>
+                <span>-</span>
+              </div>
+
+              <!-- Signatures Section -->
+              <div class="signatures-grid">
+                <div class="sig-box">
+                  <div style="font-weight: 500;" id="viewQuotedByName"></div>
+                  <div>
+                    <div class="sig-line"></div>
+                    <div style="font-weight: bold;">ผู้เสนอราคา</div>
+                  </div>
+                </div>
+                <div class="sig-box">
+                  <div></div>
+                  <div>
+                    <div class="sig-line"></div>
+                    <div style="font-weight: bold;">ผู้อนุมัติสั่งซื้อ</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Notice (Anchored at the bottom of the A4 page) -->
+        <div class="doc-footer">
+          <div id="viewValidDays" style="font-weight: bold;">หมายเหตุ : ราคานี้ตกลงตามเงื่อนไขภายใน 30 วัน</div>
+          <div>FP-SA-01-02 Rev.00</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script src="app.js?v=3.5"></script>
+</body>
+</html>
